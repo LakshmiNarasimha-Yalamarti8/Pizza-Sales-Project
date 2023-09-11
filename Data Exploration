@@ -1,0 +1,191 @@
+-------- # DATA EXPLORATION (Analysis)
+
+Select * from [dbo].[pizza_sales]
+-- TotalRevenue
+select sum(total_price) as TotalRevenue 
+from [dbo].[pizza_sales]
+
+----TotalOrders
+select COUNT(DISTINCT order_id) as TotalOrders 
+from [dbo].[pizza_sales]
+
+--PIZZASALES
+select sum(quantity) as PIZZASALES 
+from [dbo].[pizza_sales]
+
+-- AVG_ORDERVALUE
+select sum(total_price)/COUNT(DISTINCT order_id) as AVG_ORDERVALUE 
+from [dbo].[pizza_sales]
+
+-- AVG_PIZZAS_PER_ORDER
+select sum(quantity)/COUNT(DISTINCT order_id) as AVG_PIZZAS_PER_ORDER 
+from [dbo].[pizza_sales]
+
+-- DAILY_ORDERS
+select DATENAME(DW,order_date),  count(distinct order_id) as DAILY_ORDERS
+from [dbo].[pizza_sales]
+group  by DATENAME(DW,order_date)
+order by 2 desc
+
+--  MONTHLY_ORDERS
+select DATENAME(MONTH,order_date) AS order_date, count(distinct order_id as MONTHLY_ORDERS 
+from [dbo].[pizza_sales]
+group  by DATENAME(MONTH,order_date)
+order by 1 desc
+
+
+-- Hourly_ORDERS
+select DATENAME(HOUR,order_time), count(distinct order_id as DAILY_ORDERS
+from [dbo].[pizza_sales]
+group  by DATENAME(HOUR,order_time)
+order by 2 desc
+--------------------------------------------------------------------------
+-- % OF PIZZ SALES PER CATEGORY
+select pizza_category,
+CAST (
+sum(total_price)*100/
+(Select sum(total_price) from [dbo].[pizza_sales])
+ AS DECIMAL(10,2))
+ as PCT 
+from [dbo].[pizza_sales]
+group by pizza_category
+ORDER BY 2 DESC
+
+-- % OF PIZZ SALES PER PIZZA TYPE
+
+
+select pizza_name,
+CAST (
+sum(total_price)*100/
+(Select sum(total_price) from [dbo].[pizza_sales])
+ AS DECIMAL(10,2))
+ as PCT 
+from [dbo].[pizza_sales]
+group by pizza_name
+ORDER BY 2 DESC
+
+
+-- % OF PIZZ SALES PER PIZZA size
+
+select pizza_size,
+CAST (
+sum(total_price)*100/
+(Select sum(total_price) from [dbo].[pizza_sales])
+ AS DECIMAL(10,2))
+ as PCT 
+from [dbo].[pizza_sales]
+group by pizza_size
+ORDER BY 2 DESC
+
+--------------------------------------------------------------------------
+--- REVENUE PER CATEGORY
+
+select pizza_category,sum(total_price) as Revenue 
+from [dbo].[pizza_sales]
+group by pizza_category
+
+--- REVENUE PER PIZZA TYPE
+
+select pizza_name,sum(total_price) as Revenue 
+from [dbo].[pizza_sales]
+group by pizza_name
+ORDER BY 1
+
+--- REVENUE PER SIZE
+
+select pizza_size,sum(total_price) as Revenue 
+from [dbo].[pizza_sales]
+group by pizza_size
+ORDER BY 1
+------------------------------------------------
+-- Total Revenue per category based on size
+select pizza_category,pizza_size,sum(total_price) as Revenue 
+from [dbo].[pizza_sales]
+group by pizza_category,pizza_size
+order by 1,3 desc
+
+-- Total Revenue per pizza type  based on size
+
+select pizza_name,pizza_size,sum(total_price) as Revenue 
+from [dbo].[pizza_sales]
+group by pizza_name,pizza_size
+order by 1,3 desc
+-----------------------------------------------------------------------
+---QUANTITY sold,total revenue based on category & Pizza type
+select pizza_category,pizza_name,SUM(quantity) AS QUANTITY,sum(total_price) as Revenue 
+from [dbo].[pizza_sales]
+group by pizza_category,pizza_name
+ORDER BY 1,4 DESC
+
+select pizza_category,SUM(quantity) AS QUANTITY,sum(total_price) as Revenue 
+from [dbo].[pizza_sales]
+group by pizza_category
+ORDER BY 3 DESC
+
+-----------------------------------------
+-- TOP 5 CATEGORY BASED ON REVENUE,QUANTITY,ORDERS
+
+
+Select TOP 5 pizza_category,
+SUM(total_price) AS TOTAL_REVENUE
+from [dbo].[pizza_sales]
+GROUP BY pizza_category
+ORDER BY 2 DESC
+
+Select TOP 5 pizza_category,
+SUM(quantity) AS TOTAL_QUANTITY
+from [dbo].[pizza_sales]
+GROUP BY pizza_category
+ORDER BY 2 DESC
+
+
+
+Select TOP 5 pizza_category,
+COUNT(DISTINCT order_id) AS TOTAL_ORDERS
+from [dbo].[pizza_sales]
+GROUP BY pizza_category
+ORDER BY 2 DESC
+-----------------------------------------
+-- TOP 5 PIZZ TYPES  BASED ON REVENUE,QUANTITY,ORDERS
+
+
+Select TOP 5 pizza_NAME,
+SUM(total_price) AS TOTAL_REVENUE
+from [dbo].[pizza_sales]
+GROUP BY pizza_NAME
+ORDER BY 2 DESC
+
+Select TOP 5 pizza_NAME,
+SUM(quantity) AS TOTAL_QUANTITY
+from [dbo].[pizza_sales]
+GROUP BY pizza_NAME
+ORDER BY 2 DESC
+
+
+
+Select TOP 5 pizza_NAME,
+COUNT(DISTINCT order_id) AS TOTAL_ORDERS
+from [dbo].[pizza_sales]
+GROUP BY pizza_NAME
+ORDER BY 2 DESC
+--------------------------------
+--- Bottom 5
+Select TOP 5 pizza_NAME,
+SUM(total_price) AS TOTAL_REVENUE
+from [dbo].[pizza_sales]
+GROUP BY pizza_NAME
+ORDER BY 2 
+
+Select TOP 5 pizza_NAME,
+SUM(quantity) AS TOTAL_QUANTITY
+from [dbo].[pizza_sales]
+GROUP BY pizza_NAME
+ORDER BY 2 
+
+Select TOP 5 pizza_NAME,
+COUNT(DISTINCT order_id) AS TOTAL_ORDERS
+from [dbo].[pizza_sales]
+GROUP BY pizza_NAME
+ORDER BY 2 
+
+--------------------------------------------
