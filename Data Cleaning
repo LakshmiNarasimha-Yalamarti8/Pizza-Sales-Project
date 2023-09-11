@@ -1,0 +1,45 @@
+
+---------- # DATA CLEANING 
+
+Select distinct pizza_size from [dbo].[pizza_sales]
+
+Select distinct pizza_size ,
+case when pizza_size ='M' THEN 'Medium'
+when pizza_size ='l' THEN 'Large'
+when pizza_size ='XL' THEN 'X-Large'
+when pizza_size ='XXL' THEN 'XX-Large'
+when pizza_size ='S' THEN 'Regular'
+else ''
+end as ps 
+from [dbo].[pizza_sales]
+
+update [dbo].[pizza_sales]
+set pizza_size = case when pizza_size ='M' THEN 'Medium'
+when pizza_size ='l' THEN 'Large'
+when pizza_size ='XL' THEN 'X-Large'
+when pizza_size ='XXL' THEN 'XX-Large'
+when pizza_size ='S' THEN 'Regular'
+else ''
+end 
+
+Select distinct pizza_size from [dbo].[pizza_sales]
+
+Select * from [dbo].[pizza_sales]
+
+-----------------------------
+Select order_date from [dbo].[pizza_sales]
+
+alter table [dbo].[pizza_sales]
+alter column  order_date nvarchar(50)
+
+UPDATE [dbo].[pizza_sales]
+SET order_date =  CASE WHEN order_date LIKE '%-%'
+				Then format(cast(order_date as date),'MM-dd-yyyy')
+				else ''
+				end   from [dbo].[pizza_sales]
+
+Select order_date from [dbo].[pizza_sales]
+
+
+
+
